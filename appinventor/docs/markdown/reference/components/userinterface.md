@@ -362,6 +362,9 @@ Component for displaying images and basic animations.
 
 {:.properties}
 
+{:id="Image.AlternateText" .text .wo} *AlternateText*
+: A written description of what the image looks like.
+
 {:id="Image.Animation" .text .wo .bo} *Animation*
 : This is a limited form of animation that can attach a small number of motion types to images.
  The allowable motions are `ScrollRightSlow`, `ScrollRight`, `ScrollRightFast`,
