@@ -8,6 +8,7 @@ package com.google.appinventor.client.editor.simple.components;
 
 import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
+import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
 import com.google.appinventor.client.output.OdeLog;
 import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.ErrorHandler;
@@ -24,7 +25,7 @@ import com.google.gwt.user.client.ui.Image;
  *
  * @author lizlooney@google.com (Liz Looney)
  */
-abstract class MockButtonBase extends MockVisibleComponent {
+abstract class MockButtonBase extends MockVisibleComponent implements FormChangeListener {
   // Property names
   private static final String PROPERTY_NAME_IMAGE = "Image";
 
@@ -75,6 +76,18 @@ abstract class MockButtonBase extends MockVisibleComponent {
     deckPanel.add(image);
     deckPanel.showWidget(0);
     initComponent(deckPanel);
+  }
+
+  @Override
+  protected void onAttach() {
+    super.onAttach();
+    ((YaFormEditor) editor).getForm().addFormChangeListener(this);
+  }
+
+  @Override
+  protected void onDetach() {
+    super.onDetach();
+    ((YaFormEditor) editor).getForm().removeFormChangeListener(this);
   }
 
   /**
@@ -159,7 +172,12 @@ abstract class MockButtonBase extends MockVisibleComponent {
       return;
     }
     if (MockComponentsUtil.isDefaultColor(text)) {
-      MockComponentsUtil.resetWidgetBackgroundColor(buttonWidget);
+      MockForm form = ((YaFormEditor) editor).getForm();
+      if (form != null && form.getPropertyValue("ShowListsAsJson").equals("True")) {
+        MockComponentsUtil.setWidgetBackgroundColor(buttonWidget, "&HFF000000");
+      } else {
+        MockComponentsUtil.resetWidgetBackgroundColor(buttonWidget);
+      }
     } else {
       MockComponentsUtil.setWidgetBackgroundColor(buttonWidget, text);
     }
@@ -242,7 +260,12 @@ abstract class MockButtonBase extends MockVisibleComponent {
    */
   private void setTextColorProperty(String text) {
     if (MockComponentsUtil.isDefaultColor(text)) {
-      MockComponentsUtil.resetWidgetTextColor(buttonWidget);
+      MockForm form = ((YaFormEditor) editor).getForm();
+      if (form != null && form.getPropertyValue("ShowListsAsJson").equals("True")) {
+        MockComponentsUtil.setWidgetTextColor(buttonWidget, "&HFFFFFFFF");
+      } else {
+        MockComponentsUtil.resetWidgetTextColor(buttonWidget);
+      }
     } else {
       MockComponentsUtil.setWidgetTextColor(buttonWidget, text);
     }
@@ -321,5 +344,33 @@ abstract class MockButtonBase extends MockVisibleComponent {
     } else if (propertyName.equals(PROPERTY_NAME_BUTTONSHAPE)){
       setShapeProperty(newValue);
     }
+  }
+
+  @Override
+  public void onComponentPropertyChanged(MockComponent component, String propertyName, String propertyValue) {
+    if (component.getType().equals(MockForm.TYPE) && propertyName.equals("ShowListsAsJson")) {
+      setBackgroundColorProperty(getPropertyValue(PROPERTY_NAME_BACKGROUNDCOLOR));
+      setTextColorProperty(getPropertyValue(PROPERTY_NAME_TEXTCOLOR));
+    }
+  }
+
+  @Override
+  public void onComponentRemoved(MockComponent component, boolean permanentlyDeleted) {
+
+  }
+
+  @Override
+  public void onComponentAdded(MockComponent component) {
+
+  }
+
+  @Override
+  public void onComponentRenamed(MockComponent component, String oldName) {
+
+  }
+
+  @Override
+  public void onComponentSelectionChange(MockComponent component, boolean selected) {
+
   }
 }
