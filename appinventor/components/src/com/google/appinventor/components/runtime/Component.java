@@ -86,7 +86,7 @@ public interface Component {
   /*
    * Font constants. DUNANDCHANGE
    */
-  static final float FONT_DEFAULT_SIZE = 16;
+    static final float FONT_DEFAULT_SIZE = 14;
 
   /*
    * Layout constants.

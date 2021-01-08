@@ -8,11 +8,13 @@ package com.google.appinventor.client.editor.simple.components;
 
 import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
+import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
 import com.google.appinventor.components.common.ComponentConstants;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+
 
 /**
  * Abstract superclass for textbox based mock components.
@@ -20,7 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author sharon@google.com (Sharon Perl)
  * @author lizlooney@google.com (Liz Looney)
  */
-abstract class MockTextBoxBase extends MockWrapper {
+abstract class MockTextBoxBase extends MockWrapper implements FormChangeListener{
 
   // GWT widget used to mock a Simple TextBox
   private final TextBox textBoxWidget;
@@ -38,6 +40,16 @@ abstract class MockTextBoxBase extends MockWrapper {
     initWrapper(textBoxWidget);
   }
 
+  @Override
+  protected void onAttach() {
+        super.onAttach();
+        ((YaFormEditor) editor).getForm().addFormChangeListener(this);
+  }
+  @Override
+  protected void onDetach() {
+        super.onDetach();
+        ((YaFormEditor) editor).getForm().removeFormChangeListener(this);
+  }
   /**
    * Class that extends TextBox so we can use a protected constructor.
    *
@@ -84,7 +96,14 @@ abstract class MockTextBoxBase extends MockWrapper {
    */
   private void setBackgroundColorProperty(String text) {
     if (MockComponentsUtil.isDefaultColor(text)) {
-      text = "&HFFFFFFFF";  // white
+      //DUNAND CHANGE
+
+      MockForm form = ((YaFormEditor) editor).getForm();
+      if (form != null && form.getPropertyValue("HighContrast").equals("True")) {
+        text = "&HFF000000";  //black
+      } else {
+        text = "&HFFFFFFFF";  // white
+      }
     }
     MockComponentsUtil.setWidgetBackgroundColor(textBoxWidget, text);
   }
@@ -148,12 +167,22 @@ abstract class MockTextBoxBase extends MockWrapper {
    */
   private void setTextColorProperty(String text) {
     if (MockComponentsUtil.isDefaultColor(text)) {
-      text = "&HFF000000";  // black
+      MockForm form = ((YaFormEditor) editor).getForm();
+      if (form != null && form.getPropertyValue("HighContrast").equals("True")) {
+        text = "&HFFFFFFFF";  // white
+      } else {
+        text = "&HFF000000";  //black
+
+      }
+
     }
+
     MockComponentsUtil.setWidgetTextColor(textBoxWidget, text);
+
   }
 
   // PropertyChangeListener implementation
+
 
   @Override
   public void onPropertyChange(String propertyName, String newValue) {
@@ -186,5 +215,37 @@ abstract class MockTextBoxBase extends MockWrapper {
     } else if (propertyName.equals(PROPERTY_NAME_TEXTCOLOR)) {
       setTextColorProperty(newValue);
     }
+  }
+
+
+
+
+  //DUNAND CHANGE
+  @Override
+  public void onComponentPropertyChanged(MockComponent component, String propertyName, String propertyValue) {
+    if (component.getType().equals(MockForm.TYPE) && propertyName.equals("HighContrast")) {
+      setBackgroundColorProperty(getPropertyValue(PROPERTY_NAME_BACKGROUNDCOLOR));
+      setTextColorProperty(getPropertyValue(PROPERTY_NAME_TEXTCOLOR));
+    }
+  }
+
+  @Override
+  public void onComponentRemoved(MockComponent component, boolean permanentlyDeleted) {
+
+  }
+
+  @Override
+  public void onComponentAdded(MockComponent component) {
+
+  }
+
+  @Override
+  public void onComponentRenamed(MockComponent component, String oldName) {
+
+  }
+
+  @Override
+  public void onComponentSelectionChange(MockComponent component, boolean selected) {
+
   }
 }

@@ -172,8 +172,9 @@ abstract class MockButtonBase extends MockVisibleComponent implements FormChange
       return;
     }
     if (MockComponentsUtil.isDefaultColor(text)) {
+      //DUNAND CHANGE
       MockForm form = ((YaFormEditor) editor).getForm();
-      if (form != null && form.getPropertyValue("ShowListsAsJson").equals("True")) {
+      if (form != null && form.getPropertyValue("HighContrast").equals("True")) {
         MockComponentsUtil.setWidgetBackgroundColor(buttonWidget, "&HFF000000");
       } else {
         MockComponentsUtil.resetWidgetBackgroundColor(buttonWidget);
@@ -260,8 +261,9 @@ abstract class MockButtonBase extends MockVisibleComponent implements FormChange
    */
   private void setTextColorProperty(String text) {
     if (MockComponentsUtil.isDefaultColor(text)) {
+      //DUNAND CHANGE
       MockForm form = ((YaFormEditor) editor).getForm();
-      if (form != null && form.getPropertyValue("ShowListsAsJson").equals("True")) {
+      if (form != null && form.getPropertyValue("HighContrast").equals("True")) {
         MockComponentsUtil.setWidgetTextColor(buttonWidget, "&HFFFFFFFF");
       } else {
         MockComponentsUtil.resetWidgetTextColor(buttonWidget);
@@ -343,14 +345,17 @@ abstract class MockButtonBase extends MockVisibleComponent implements FormChange
       setTextColorProperty(newValue);
     } else if (propertyName.equals(PROPERTY_NAME_BUTTONSHAPE)){
       setShapeProperty(newValue);
+
     }
   }
 
   @Override
+  //DUNAND CHANGE
   public void onComponentPropertyChanged(MockComponent component, String propertyName, String propertyValue) {
-    if (component.getType().equals(MockForm.TYPE) && propertyName.equals("ShowListsAsJson")) {
+    if (component.getType().equals(MockForm.TYPE) && propertyName.equals("HighContrast")) {
       setBackgroundColorProperty(getPropertyValue(PROPERTY_NAME_BACKGROUNDCOLOR));
       setTextColorProperty(getPropertyValue(PROPERTY_NAME_TEXTCOLOR));
+      setFontSizeProperty(getPropertyValue(PROPERTY_NAME_FONTSIZE));
     }
   }
 

@@ -976,6 +976,9 @@ Top-level component containing all other components in the program.
 {:id="Screen.Height" .number .ro .bo} *Height*
 : Returns the Screen height in pixels (y-size).
 
+{:id="Screen.HighContrast" .boolean} *HighContrast*
+: When checked, there will be high contrast mode turned on.
+
 {:id="Screen.Icon" .text .wo .do} *Icon*
 : The image used for your App's display icon should be a square png or jpeg image with dimensions
  up to 1024x1024 pixels. Larger images may cause compiling or installing the app to fail.

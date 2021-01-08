@@ -8,6 +8,7 @@ package com.google.appinventor.components.runtime;
 
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import com.google.appinventor.components.annotations.DesignerProperty;
 import com.google.appinventor.components.annotations.IsColor;
 import com.google.appinventor.components.annotations.PropertyCategory;
@@ -158,6 +159,9 @@ public abstract class ButtonBase extends AndroidViewComponent
     Shape(Component.BUTTON_SHAPE_DEFAULT);
   }
 
+  public void Initialize(){
+    updateAppearance();
+  }
     /**
      * If a custom background images is specified for the button, then it will lose the pressed
      * and disabled image effects; no visual feedback.
@@ -343,7 +347,6 @@ public abstract class ButtonBase extends AndroidViewComponent
 
     // Clear the prior background image.
     backgroundImageDrawable = null;
-
     // Load image from file.
     if (imagePath.length() > 0) {
       try {
@@ -402,7 +405,17 @@ public abstract class ButtonBase extends AndroidViewComponent
         if (backgroundColor == Component.COLOR_DEFAULT) {
           // If there is no background image and color is default,
           // restore original 3D bevel appearance.
-          ViewUtil.setBackgroundDrawable(view, defaultButtonDrawable);
+          //ViewUtil.setBackgroundDrawable(view, defaultButtonDrawable);
+          //DUNAND_NEW
+          if (container.$form().HighContrast()) {
+            ViewUtil.setBackgroundDrawable(view, null);
+            ViewUtil.setBackgroundDrawable(view, getSafeBackgroundDrawable());
+            view.getBackground().setColorFilter(Component.COLOR_BLACK, PorterDuff.Mode.SRC_ATOP);
+          }
+          else {
+            ViewUtil.setBackgroundDrawable(view, defaultButtonDrawable);
+          }
+
         } else if (backgroundColor == Component.COLOR_NONE) {
           // Clear the background image.
           ViewUtil.setBackgroundDrawable(view, null);
@@ -490,7 +503,14 @@ public abstract class ButtonBase extends AndroidViewComponent
       view.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.CLEAR);
     }
     else if (backgroundColor == Component.COLOR_DEFAULT) {
-      view.getBackground().setColorFilter(SHAPED_DEFAULT_BACKGROUND_COLOR, PorterDuff.Mode.SRC_ATOP);
+      //DUNAND change
+      //view.getBackground().setColorFilter(SHAPED_DEFAULT_BACKGROUND_COLOR, PorterDuff.Mode.SRC_ATOP);
+      if (container.$form().HighContrast()) {
+        view.getBackground().setColorFilter(Component.COLOR_BLACK, PorterDuff.Mode.SRC_ATOP);
+      }
+      else{
+        view.getBackground().setColorFilter(SHAPED_DEFAULT_BACKGROUND_COLOR, PorterDuff.Mode.SRC_ATOP);
+      }
     }
     else {
       view.getBackground().setColorFilter(backgroundColor, PorterDuff.Mode.SRC_ATOP);
@@ -729,7 +749,14 @@ public abstract class ButtonBase extends AndroidViewComponent
     if (argb != Component.COLOR_DEFAULT) {
       TextViewUtil.setTextColor(view, argb);
     } else {
-      TextViewUtil.setTextColors(view, defaultColorStateList);
+      //DUNAND CHANGE
+      //TextViewUtil.setTextColors(view, defaultColorStateList);
+      if (container.$form().HighContrast()){
+        TextViewUtil.setTextColor(view, Color.WHITE);
+      }
+      else {
+        TextViewUtil.setTextColors(view, defaultColorStateList);
+      }
     }
   }
 

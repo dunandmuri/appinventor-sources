@@ -110,8 +110,17 @@ public abstract class TextBoxBase extends AndroidViewComponent
     TextViewUtil.setFontTypeface(view, fontTypeface, bold, italic);
     FontSize(Component.FONT_DEFAULT_SIZE);
     Hint("");
+    if (container.$form().HighContrast()) {
+      view.setHintTextColor(COLOR_YELLOW);
+    }
+    else {
+      view.setHintTextColor(0xFF9E9E9E);
+    }
+
     Text("");
     TextColor(Component.COLOR_DEFAULT);
+    //DUNAND CHANGE
+    BackgroundColor(Component.COLOR_DEFAULT);
   }
 
   @Override
@@ -220,7 +229,14 @@ public abstract class TextBoxBase extends AndroidViewComponent
     if (argb != Component.COLOR_DEFAULT) {
       TextViewUtil.setBackgroundColor(view, argb);
     } else {
-      ViewUtil.setBackgroundDrawable(view, defaultTextBoxDrawable);
+      //ViewUtil.setBackgroundDrawable(view, defaultTextBoxDrawable);
+      //DUNAND_CHANGE
+      if (container.$form().HighContrast()) {
+        TextViewUtil.setBackgroundColor(view, Component.COLOR_BLACK);
+      }
+      else {
+        ViewUtil.setBackgroundDrawable(view, defaultTextBoxDrawable);
+      }
     }
   }
 
@@ -456,14 +472,20 @@ public abstract class TextBoxBase extends AndroidViewComponent
    * @param argb  text RGB color with alpha
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_COLOR,
-      defaultValue = Component.DEFAULT_VALUE_COLOR_BLACK)
+      defaultValue = Component.DEFAULT_VALUE_COLOR_DEFAULT)
   @SimpleProperty
   public void TextColor(int argb) {
     textColor = argb;
     if (argb != Component.COLOR_DEFAULT) {
       TextViewUtil.setTextColor(view, argb);
     } else {
-      TextViewUtil.setTextColor(view, container.$form().isDarkTheme() ? COLOR_WHITE : Component.COLOR_BLACK);
+      //DUNAND CHANGE
+      if (container.$form().HighContrast()) {
+        TextViewUtil.setTextColor(view, COLOR_WHITE);
+      }
+      else {
+        TextViewUtil.setTextColor(view, container.$form().isDarkTheme() ? COLOR_WHITE : Component.COLOR_BLACK);
+      }
     }
   }
 

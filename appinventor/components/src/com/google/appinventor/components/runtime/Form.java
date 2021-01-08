@@ -199,6 +199,8 @@ public class Form extends AppInventorCompatActivity
 
   private FrameLayout frameLayout;
   private boolean scrollable;
+  //Dunand change
+  private boolean highContrast;
 
   private ScaledFrameLayout scaleLayout;
   private static boolean sCompatibilityMode;
@@ -442,6 +444,7 @@ public class Form extends AppInventorCompatActivity
       ActionBar(themeHelper.hasActionBar());
     }
     Scrollable(false);       // frameLayout is created in Scrollable()
+    HighContrast(false); //DUNAND change
     Sizing("Responsive");    // Note: Only the Screen1 value is used as this is per-project
     AboutScreen("");
     BackgroundImage("");
@@ -1106,6 +1109,35 @@ public class Form extends AppInventorCompatActivity
       }
     });
   }
+
+
+///DUNAND CHANGE
+  /**
+   * HighConstrast property getter method.
+   *
+   * @return  true if we want high constrast mode
+   */
+  @SimpleProperty(category = PropertyCategory.APPEARANCE,
+          description = "When checked, we will use high contrast mode")
+  public boolean HighContrast() {
+    return highContrast;
+  }
+
+  /**
+   * When checked, there will be high contrast mode turned on.
+   *
+   * @param highContrast  true if the high contrast mode is on
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+          defaultValue = "False")
+  @SimpleProperty
+  public void HighContrast(boolean highContrast) {
+
+    //this.scrollable = scrollable;
+    this.highContrast=highContrast;
+    recomputeLayout();
+  }
+  ///END DUNAND CHANGE
 
   /**
    * Scrollable property getter method.
