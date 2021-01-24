@@ -135,7 +135,17 @@ abstract class MockTextBoxBase extends MockWrapper implements FormChangeListener
    * Sets the textbox's FontSize property to a new value.
    */
   private void setFontSizeProperty(String text) {
-    MockComponentsUtil.setWidgetFontSize(textBoxWidget, text);
+    float convertedText = Float.parseFloat(text);
+    if (convertedText==14.0 || convertedText == 24.0) {      //DUNAND CHANGE
+      MockForm form = ((YaFormEditor) editor).getForm();
+      if (form != null && form.getPropertyValue("BigDefaultText").equals("True")) {
+        MockComponentsUtil.setWidgetFontSize(textBoxWidget, "24");
+      } else {
+        MockComponentsUtil.setWidgetFontSize(textBoxWidget, "14");
+      }
+    } else {
+      MockComponentsUtil.setWidgetFontSize(textBoxWidget, text);
+    }
     updatePreferredSize();
   }
 
@@ -226,6 +236,14 @@ abstract class MockTextBoxBase extends MockWrapper implements FormChangeListener
     if (component.getType().equals(MockForm.TYPE) && propertyName.equals("HighContrast")) {
       setBackgroundColorProperty(getPropertyValue(PROPERTY_NAME_BACKGROUNDCOLOR));
       setTextColorProperty(getPropertyValue(PROPERTY_NAME_TEXTCOLOR));
+      //setFontSizeProperty(getPropertyValue(PROPERTY_NAME_FONTSIZE));
+      updatePreferredSize();
+      refreshForm();
+    }
+    else if (component.getType().equals(MockForm.TYPE) && propertyName.equals("BigDefaultText")) {
+      setFontSizeProperty(getPropertyValue(PROPERTY_NAME_FONTSIZE));
+      updatePreferredSize();
+      refreshForm();
     }
   }
 

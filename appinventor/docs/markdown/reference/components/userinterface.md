@@ -966,6 +966,9 @@ Top-level component containing all other components in the program.
 : Specifies the path of the `Screen`'s background image. If there is both an `BackgroundImage`
  and a [`BackgroundColor`](#Screen.BackgroundColor) specified, only the `BackgroundImage` will be visible.
 
+{:id="Screen.BigDefaultText" .boolean} *BigDefaultText*
+: When checked, all default size text will be increased in size.
+
 {:id="Screen.BlocksToolkit" .text .wo .do} *BlocksToolkit*
 : A JSON string representing the subset for the screen. Authors of template apps can use this to control what components, designer properties, and blocks are available in the project.
 

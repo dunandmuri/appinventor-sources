@@ -201,6 +201,7 @@ public class Form extends AppInventorCompatActivity
   private boolean scrollable;
   //Dunand change
   private boolean highContrast;
+  private boolean bigDefaultText;
 
   private ScaledFrameLayout scaleLayout;
   private static boolean sCompatibilityMode;
@@ -445,6 +446,7 @@ public class Form extends AppInventorCompatActivity
     }
     Scrollable(false);       // frameLayout is created in Scrollable()
     HighContrast(false); //DUNAND change
+    BigDefaultText(false); //DUNAND change
     Sizing("Responsive");    // Note: Only the Screen1 value is used as this is per-project
     AboutScreen("");
     BackgroundImage("");
@@ -1113,7 +1115,7 @@ public class Form extends AppInventorCompatActivity
 
 ///DUNAND CHANGE
   /**
-   * HighConstrast property getter method.
+   * HighContrast property getter method.
    *
    * @return  true if we want high constrast mode
    */
@@ -1135,6 +1137,32 @@ public class Form extends AppInventorCompatActivity
 
     //this.scrollable = scrollable;
     this.highContrast=highContrast;
+    recomputeLayout();
+  }
+
+  /**
+   * BigDefaultText property getter method.
+   *
+   * @return  true if we are in the big text mode
+   */
+  @SimpleProperty(category = PropertyCategory.APPEARANCE,
+          description = "When checked, we will use high contrast mode")
+  public boolean BigDefaultText() {
+    return bigDefaultText;
+  }
+
+  /**
+   * When checked, all default size text will be increased in size.
+   *
+   * @param bigDefaultText  true if the big text mode is on
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+          defaultValue = "False")
+  @SimpleProperty
+  public void BigDefaultText(boolean bigDefaultText) {
+
+    //this.scrollable = scrollable;
+    this.bigDefaultText=bigDefaultText;
     recomputeLayout();
   }
   ///END DUNAND CHANGE

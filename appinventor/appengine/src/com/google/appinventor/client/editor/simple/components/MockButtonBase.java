@@ -76,6 +76,7 @@ abstract class MockButtonBase extends MockVisibleComponent implements FormChange
     deckPanel.add(image);
     deckPanel.showWidget(0);
     initComponent(deckPanel);
+
   }
 
   @Override
@@ -211,8 +212,20 @@ abstract class MockButtonBase extends MockVisibleComponent implements FormChange
    * Sets the button's FontSize property to a new value.
    */
   private void setFontSizeProperty(String text) {
-    MockComponentsUtil.setWidgetFontSize(buttonWidget, text);
-    updatePreferredSizeOfButton();
+    //MockComponentsUtil.setWidgetFontSize(buttonWidget, text);
+    //updatePreferredSizeOfButton();
+    //Dunand change
+    float convertedText = Float.parseFloat(text);
+    if (convertedText==14.0 || convertedText == 24.0) {      //DUNAND CHANGE
+      MockForm form = ((YaFormEditor) editor).getForm();
+      if (form != null && form.getPropertyValue("BigDefaultText").equals("True")) {
+        MockComponentsUtil.setWidgetFontSize(buttonWidget, "24");
+      } else {
+        MockComponentsUtil.setWidgetFontSize(buttonWidget, "14");
+      }
+    } else {
+      MockComponentsUtil.setWidgetFontSize(buttonWidget, text);
+    }
   }
 
   /*
@@ -355,9 +368,17 @@ abstract class MockButtonBase extends MockVisibleComponent implements FormChange
     if (component.getType().equals(MockForm.TYPE) && propertyName.equals("HighContrast")) {
       setBackgroundColorProperty(getPropertyValue(PROPERTY_NAME_BACKGROUNDCOLOR));
       setTextColorProperty(getPropertyValue(PROPERTY_NAME_TEXTCOLOR));
-      setFontSizeProperty(getPropertyValue(PROPERTY_NAME_FONTSIZE));
+      //setFontSizeProperty(getPropertyValue(PROPERTY_NAME_FONTSIZE));
+      updatePreferredSizeOfButton();
+      refreshForm();
     }
-  }
+    else if (component.getType().equals(MockForm.TYPE) && propertyName.equals("BigDefaultText")) {
+      setFontSizeProperty(getPropertyValue(PROPERTY_NAME_FONTSIZE));
+      updatePreferredSizeOfButton();
+      refreshForm();
+    }
+
+    }
 
   @Override
   public void onComponentRemoved(MockComponent component, boolean permanentlyDeleted) {

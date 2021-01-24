@@ -8,6 +8,7 @@ package com.google.appinventor.client.editor.simple.components;
 
 import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
+import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
 import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.user.client.ui.InlineHTML;
 
@@ -41,7 +42,9 @@ public final class MockLabel extends MockVisibleComponent {
     labelWidget = new InlineHTML();
     labelWidget.setStylePrimaryName("ode-SimpleMockComponent");
     initComponent(labelWidget);
+
   }
+
 
   @Override
   public void onCreateFromPalette() {
@@ -84,7 +87,17 @@ public final class MockLabel extends MockVisibleComponent {
    * Sets the label's FontSize property to a new value.
    */
   private void setFontSizeProperty(String text) {
-    MockComponentsUtil.setWidgetFontSize(labelWidget, text);
+    float convertedText = Float.parseFloat(text);
+    if (convertedText==14.0 || convertedText == 24.0) {      //DUNAND CHANGE
+      MockForm form = ((YaFormEditor) editor).getForm();
+      if (form != null && form.getPropertyValue("BigDefaultText").equals("True")) {
+        MockComponentsUtil.setWidgetFontSize(labelWidget, "24");
+      } else {
+        MockComponentsUtil.setWidgetFontSize(labelWidget, "14");
+      }
+    } else {
+      MockComponentsUtil.setWidgetFontSize(labelWidget, text);
+    }
   }
 
   /*
@@ -157,4 +170,6 @@ public final class MockLabel extends MockVisibleComponent {
       refreshForm();
     }
   }
+
+
 }

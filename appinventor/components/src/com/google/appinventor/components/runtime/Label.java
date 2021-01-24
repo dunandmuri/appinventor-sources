@@ -312,7 +312,18 @@ private void setLabelMargins(boolean hasMargins) {
       defaultValue = Component.FONT_DEFAULT_SIZE + "")
   @SimpleProperty
   public void FontSize(float size) {
-    TextViewUtil.setFontSize(view, size);
+
+    if (Math.abs(size-Component.FONT_DEFAULT_SIZE)<.01 || Math.abs(size-24)<.01) {
+      if (container.$form().BigDefaultText()) {
+        TextViewUtil.setFontSize(view, 24);
+      }
+      else {
+        TextViewUtil.setFontSize(view, Component.FONT_DEFAULT_SIZE);
+      }
+    }
+    else {
+      TextViewUtil.setFontSize(view, size);
+    }
   }
 
   /**

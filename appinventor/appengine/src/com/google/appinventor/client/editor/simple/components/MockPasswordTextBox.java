@@ -204,6 +204,17 @@ public final class MockPasswordTextBox extends MockWrapper implements FormChange
     if (component.getType().equals(MockForm.TYPE) && propertyName.equals("HighContrast")) {
       setBackgroundColorProperty(getPropertyValue(PROPERTY_NAME_BACKGROUNDCOLOR));
       setTextColorProperty(getPropertyValue(PROPERTY_NAME_TEXTCOLOR));
+      if (propertyValue.equals("True")){
+        setFontSizeProperty("24");
+        refreshForm();
+
+      }
+      else {
+        setFontSizeProperty("14");
+        //setFontSizeProperty(String.valueOf(Component.FONT_DEFAULT_SIZE));
+        refreshForm();
+
+      }
     }
   }
   @Override
