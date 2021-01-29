@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
  * Mock Label component.
  *
  */
-public final class MockLabel extends MockVisibleComponent {
+public final class MockLabel extends MockVisibleComponent implements FormChangeListener{
 
   /**
    * Component type name.
@@ -43,6 +43,18 @@ public final class MockLabel extends MockVisibleComponent {
     labelWidget.setStylePrimaryName("ode-SimpleMockComponent");
     initComponent(labelWidget);
 
+  }
+
+  @Override
+  protected void onAttach() {
+    super.onAttach();
+    ((YaFormEditor) editor).getForm().addFormChangeListener(this);
+  }
+
+  @Override
+  protected void onDetach() {
+    super.onDetach();
+    ((YaFormEditor) editor).getForm().removeFormChangeListener(this);
   }
 
 
@@ -172,4 +184,31 @@ public final class MockLabel extends MockVisibleComponent {
   }
 
 
+  @Override
+  public void onComponentPropertyChanged(MockComponent component, String propertyName, String propertyValue) {
+    if (component.getType().equals(MockForm.TYPE) && propertyName.equals("BigDefaultText")) {
+      setFontSizeProperty(getPropertyValue(PROPERTY_NAME_FONTSIZE));
+      refreshForm();
+    }
+  }
+
+  @Override
+  public void onComponentRemoved(MockComponent component, boolean permanentlyDeleted) {
+
+  }
+
+  @Override
+  public void onComponentAdded(MockComponent component) {
+
+  }
+
+  @Override
+  public void onComponentRenamed(MockComponent component, String oldName) {
+
+  }
+
+  @Override
+  public void onComponentSelectionChange(MockComponent component, boolean selected) {
+
+  }
 }
