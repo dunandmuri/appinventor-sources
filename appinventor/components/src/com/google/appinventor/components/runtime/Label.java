@@ -37,7 +37,7 @@ import android.widget.TextView;
     "the appearance and placement of the text.",
     category = ComponentCategory.USERINTERFACE)
 @SimpleObject
-public final class Label extends AndroidViewComponent {
+public final class Label extends AndroidViewComponent implements AccessibleComponent{
 
   // default margin around a label in DPs
   // note that the spacing between adjacent labels will be twice this value
@@ -78,6 +78,9 @@ public final class Label extends AndroidViewComponent {
 
   // HTML content of the label
   private String htmlContent;
+
+  //Whether or not the text should be big
+  private boolean isBigText = false;
 
   /**
    * Creates a new Label component.
@@ -314,7 +317,7 @@ private void setLabelMargins(boolean hasMargins) {
   public void FontSize(float size) {
 
     if (Math.abs(size-Component.FONT_DEFAULT_SIZE)<.01 || Math.abs(size-24)<.01) {
-      if (container.$form().BigDefaultText()) {
+      if (isBigText || container.$form().BigDefaultText()) {
         TextViewUtil.setFontSize(view, 24);
       }
       else {
@@ -467,5 +470,31 @@ private void setLabelMargins(boolean hasMargins) {
     } else {
       TextViewUtil.setTextColor(view, container.$form().isDarkTheme() ? Component.COLOR_WHITE : Component.COLOR_BLACK);
     }
+  }
+
+  @Override
+  public void setHighContrast(boolean isHighContrast) {
+
+  }
+
+  @Override
+  public boolean getHighContrast() {
+    return false;
+  }
+
+  @Override
+  public void setLargeFont(boolean isLargeFont) {
+    if (TextViewUtil.getFontSize(view, container.$context()) == 24.0 || TextViewUtil.getFontSize(view, container.$context()) == Component.FONT_DEFAULT_SIZE) {
+      if (isLargeFont) {
+        TextViewUtil.setFontSize(view, 24);
+      } else {
+        TextViewUtil.setFontSize(view, Component.FONT_DEFAULT_SIZE);
+      }
+    }
+  }
+
+  @Override
+  public boolean getLargeFont() {
+    return isBigText;
   }
 }

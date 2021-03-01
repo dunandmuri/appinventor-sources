@@ -6,9 +6,12 @@
 package com.google.appinventor.client.editor.simple.components;
 
 import com.google.appinventor.client.editor.simple.SimpleEditor;
+import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
+
+import java.text.Normalizer;
 
 import static com.google.appinventor.client.Ode.MESSAGES;
 
@@ -17,7 +20,7 @@ import static com.google.appinventor.client.Ode.MESSAGES;
  *
  * @author srlane@mit.edu (Susan Rati Lane)
  */
-abstract class MockToggleBase<T extends Widget> extends MockWrapper {
+abstract class MockToggleBase<T extends Widget> extends MockWrapper implements FormChangeListener {
 
   // Set toggle widget in child classes
   protected T toggleWidget;
@@ -35,6 +38,18 @@ abstract class MockToggleBase<T extends Widget> extends MockWrapper {
   public void onCreateFromPalette() {
     // Change toggle caption to component name
     changeProperty(PROPERTY_NAME_TEXT, MESSAGES.textPropertyValue(getName()));
+  }
+
+  @Override
+  protected void onAttach() {
+    super.onAttach();
+    ((YaFormEditor) editor).getForm().addFormChangeListener(this);
+  }
+
+  @Override
+  protected void onDetach() {
+    super.onDetach();
+    ((YaFormEditor) editor).getForm().removeFormChangeListener(this);
   }
 
   /*
@@ -85,8 +100,19 @@ abstract class MockToggleBase<T extends Widget> extends MockWrapper {
    * Sets the toggle's FontSize property to a new value.
    */
   protected void setFontSizeProperty(String text) {
-    MockComponentsUtil.setWidgetFontSize(toggleWidget, text);
+    float convertedText = Float.parseFloat(text);
+    if (convertedText==14.0 || convertedText == 24.0) {      //DUNAND CHANGE
+      MockForm form = ((YaFormEditor) editor).getForm();
+      if (form != null && form.getPropertyValue("BigDefaultText").equals("True")) {
+        MockComponentsUtil.setWidgetFontSize(toggleWidget, "24");
+      } else {
+        MockComponentsUtil.setWidgetFontSize(toggleWidget, "14");
+      }
+    } else {
+      MockComponentsUtil.setWidgetFontSize(toggleWidget, text);
+    }
     updatePreferredSize();
+
   }
 
   /*
@@ -144,5 +170,33 @@ abstract class MockToggleBase<T extends Widget> extends MockWrapper {
   protected void updatePreferredSize() {
     preferredSize = MockComponentsUtil
         .getPreferredSizeOfElement(DOM.clone(toggleWidget.getElement(), true));
+  }
+
+  @Override
+  public void onComponentPropertyChanged(MockComponent component, String propertyName, String propertyValue) {
+    if (component.getType().equals(MockForm.TYPE) && propertyName.equals("BigDefaultText")) {
+      setFontSizeProperty(getPropertyValue(PROPERTY_NAME_FONTSIZE));
+      refreshForm();
+    }
+  }
+
+  @Override
+  public void onComponentRemoved(MockComponent component, boolean permanentlyDeleted) {
+
+  }
+
+  @Override
+  public void onComponentAdded(MockComponent component) {
+
+  }
+
+  @Override
+  public void onComponentRenamed(MockComponent component, String oldName) {
+
+  }
+
+  @Override
+  public void onComponentSelectionChange(MockComponent component, boolean selected) {
+
   }
 }

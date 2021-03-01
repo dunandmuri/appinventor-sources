@@ -6,6 +6,8 @@
 
 package com.google.appinventor.components.runtime;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import com.google.appinventor.components.annotations.DesignerProperty;
 import com.google.appinventor.components.annotations.IsColor;
 import com.google.appinventor.components.annotations.PropertyCategory;
@@ -35,7 +37,7 @@ import android.widget.EditText;
 
 @SimpleObject
 public abstract class TextBoxBase extends AndroidViewComponent
-    implements OnFocusChangeListener {
+    implements OnFocusChangeListener, AccessibleComponent {
 
   protected final EditText view;
 
@@ -62,6 +64,12 @@ public abstract class TextBoxBase extends AndroidViewComponent
 
   // This is our handle on Android's nice 3-d default textbox.
   private Drawable defaultTextBoxDrawable;
+
+  //Whether or not the button is in high contrast mode
+  private boolean isHighContrast = false;
+
+  //Whether or not the button is in big text mode
+  private boolean isBigText = false;
 
   /**
    * Creates a new TextBoxBase component
@@ -110,7 +118,7 @@ public abstract class TextBoxBase extends AndroidViewComponent
     TextViewUtil.setFontTypeface(view, fontTypeface, bold, italic);
     FontSize(Component.FONT_DEFAULT_SIZE);
     Hint("");
-    if (container.$form().HighContrast()) {
+    if (isHighContrast || container.$form().HighContrast()) {
       view.setHintTextColor(COLOR_YELLOW);
     }
     else {
@@ -231,7 +239,7 @@ public abstract class TextBoxBase extends AndroidViewComponent
     } else {
       //ViewUtil.setBackgroundDrawable(view, defaultTextBoxDrawable);
       //DUNAND_CHANGE
-      if (container.$form().HighContrast()) {
+      if (isHighContrast || container.$form().$form().HighContrast()) {
         TextViewUtil.setBackgroundColor(view, Component.COLOR_BLACK);
       }
       else {
@@ -491,7 +499,7 @@ public abstract class TextBoxBase extends AndroidViewComponent
       TextViewUtil.setTextColor(view, argb);
     } else {
       //DUNAND CHANGE
-      if (container.$form().HighContrast()) {
+      if (isHighContrast || container.$form().HighContrast()) {
         TextViewUtil.setTextColor(view, COLOR_WHITE);
       }
       else {
@@ -523,5 +531,53 @@ public abstract class TextBoxBase extends AndroidViewComponent
     } else {
       LostFocus();
     }
+  }
+
+  @Override
+  public void setHighContrast(boolean isHighContrast) {
+    //background of button
+    if (backgroundColor == Component.COLOR_DEFAULT) {
+      if (isHighContrast) {
+        TextViewUtil.setBackgroundColor(view, Component.COLOR_BLACK);
+      }
+      else {
+        ViewUtil.setBackgroundDrawable(view, defaultTextBoxDrawable);
+      }
+    }
+
+    //color of text
+    if (textColor == Component.COLOR_DEFAULT) {
+      if (isHighContrast) {
+        TextViewUtil.setTextColor(view, COLOR_WHITE);
+        view.setHintTextColor(COLOR_YELLOW);
+
+      }
+      else {
+        TextViewUtil.setTextColor(view, container.$form().isDarkTheme() ? COLOR_WHITE : Component.COLOR_BLACK);
+        view.setHintTextColor(0xFF9E9E9E);
+
+      }
+    }
+  }
+
+  @Override
+  public boolean getHighContrast() {
+    return isHighContrast;
+  }
+
+  @Override
+  public void setLargeFont(boolean isLargeFont) {
+    if (TextViewUtil.getFontSize(view, container.$context()) == 24.0 || TextViewUtil.getFontSize(view, container.$context()) == Component.FONT_DEFAULT_SIZE) {
+      if (isLargeFont) {
+        TextViewUtil.setFontSize(view, 24);
+      } else {
+        TextViewUtil.setFontSize(view, Component.FONT_DEFAULT_SIZE);
+      }
+    }
+  }
+
+  @Override
+  public boolean getLargeFont() {
+    return isBigText;
   }
 }

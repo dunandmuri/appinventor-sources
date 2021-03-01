@@ -139,6 +139,9 @@ public class Form extends AppInventorCompatActivity
   private static final int DEFAULT_PRIMARY_COLOR_DARK = PaintUtil.hexStringToInt(ComponentConstants.DEFAULT_PRIMARY_DARK_COLOR);
   private static final int DEFAULT_ACCENT_COLOR = PaintUtil.hexStringToInt(ComponentConstants.DEFAULT_ACCENT_COLOR);
 
+  //Dunand change
+  private List<Component> allChildren = new ArrayList<>();
+
   // Keep track of the current form object.
   // activeForm always holds the Form that is currently handling event dispatching so runtime.scm
   // can lookup symbols in the correct environment.
@@ -259,6 +262,8 @@ public class Form extends AppInventorCompatActivity
   // It should be changed from 100000 to 65535 if the functionality to extend
   // FragmentActivity is added in future.
   public static final int MAX_PERMISSION_NONCE = 100000;
+
+
 
   public static class PercentStorageRecord {
     public enum Dim {
@@ -1137,8 +1142,20 @@ public class Form extends AppInventorCompatActivity
 
     //this.scrollable = scrollable;
     this.highContrast=highContrast;
+    setHighContrastRecursive(this, highContrast);
     recomputeLayout();
   }
+
+  private static void setHighContrastRecursive(ComponentContainer container, boolean enabled) {
+    for (Component child : container.getChildren()) {
+      if (child instanceof ComponentContainer) {
+        setHighContrastRecursive((ComponentContainer) child, enabled);
+      } else if (child instanceof AccessibleComponent) {
+        ((AccessibleComponent) child).setHighContrast(enabled);
+      }
+    }
+  }
+
 
   /**
    * BigDefaultText property getter method.
@@ -1163,8 +1180,21 @@ public class Form extends AppInventorCompatActivity
 
     //this.scrollable = scrollable;
     this.bigDefaultText=bigDefaultText;
+    setBigDefaultTextRecursive(this, bigDefaultText);
     recomputeLayout();
   }
+
+
+  private static void setBigDefaultTextRecursive(ComponentContainer container, boolean enabled) {
+    for (Component child : container.getChildren()) {
+      if (child instanceof ComponentContainer) {
+        setBigDefaultTextRecursive((ComponentContainer) child, enabled);
+      } else if (child instanceof AccessibleComponent) {
+        ((AccessibleComponent) child).setLargeFont(enabled);
+      }
+    }
+  }
+
   ///END DUNAND CHANGE
 
   /**
@@ -2161,8 +2191,18 @@ public class Form extends AppInventorCompatActivity
 
   @Override
   public void $add(AndroidViewComponent component) {
+
     viewLayout.add(component);
+    allChildren.add(component);
   }
+
+  //dunand change
+  @Override
+  public List<? extends Component> getChildren(){
+    return allChildren;
+  }
+
+
 
   public float deviceDensity(){
     return this.deviceDensity;

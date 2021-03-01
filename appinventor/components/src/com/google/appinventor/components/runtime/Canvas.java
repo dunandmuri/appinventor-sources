@@ -53,10 +53,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A two-dimensional touch-sensitive rectangular panel on which drawing can
@@ -845,6 +842,11 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
   @Override
   public void $add(AndroidViewComponent component) {
     throw new UnsupportedOperationException("Canvas.$add() called");
+  }
+
+  @Override
+  public List<? extends Component> getChildren(){
+    return sprites;
   }
 
   @Override
