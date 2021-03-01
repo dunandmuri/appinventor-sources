@@ -1401,7 +1401,7 @@ public class YaVersion {
   public static final String COMPANION_UPDATE_URL = "/companions/MITAI2Companion.asc";
   public static final String COMPANION_UPDATE_URL1 = "/companions/MITAI2Companion.apk";
   public static final String COMPANION_UPDATE_EMULATOR_URL = "/companions/Emulator.asc";
-  public static final String [] ACCEPTABLE_COMPANIONS = { "2.60v" };
+  public static final String [] ACCEPTABLE_COMPANIONS = { "2.60v", "2.60vu" };
 
   // Splash Screen Values
   public static final int SPLASH_SURVEY = 1;
